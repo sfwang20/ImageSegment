@@ -26,8 +26,6 @@ Mat calcMagnitude(Mat, Mat, norm_type);
 
 // Canny detector
 Mat nonMaxSuppression(Mat, Mat, norm_type);
-bool isInRange(int, int, int, int);
-void track(Mat, Mat&, float, int, int, int, int);
 void CannyDetect(Mat input, Mat& output, float lowerThresh, float upperThresh, norm_type type);
 
 
@@ -65,37 +63,22 @@ int main(int argc, char** argv) {
 	LoG(images[index], Size(3,3), 2.0, BORDER_REPLICATE, results[3][0]);
 
 	// Canny detection
-	//GaussianBlur(images[0], results[0][0], Size(3, 3), 1.0);
-	//CannyDetect(images[index], results[0], 40, 200, norm_type::L1);
+	GaussianBlur(images[index], results[4][0], Size(3, 3), 1.0);
+	CannyDetect(results[4][0], results[4][0], 40, 200, norm_type::L1);
 
-
-	Mat r[2];
-	/*
+	// Calculate magnitude
+	Mat r[2];	
 	for (int i = 0; i < 3; i++) {
 		r[i] = calcMagnitude(results[i][0], results[i][1], norm_type::L1);
 	}
-	//r[3] = cv::abs(results[3][0]);
-	*/
-
-	//r[0] = calcMagnitude(results[0][0], results[0][1], norm_type::L1);
-	//r[1] = calcMagnitude(results[1][0], results[1][1], norm_type::L1);
+	r[3] = cv::abs(results[3][0]);
 	
-	//hconcat(images[index], results[index], img_show);
-	//hconcat(results[1][1], results[2][1], show);
 	
-	for (int i = 0; i < 4; i++) {
-		resize(results[i], results[i], Size(360, 220));
-		//cvtColor(r[i], r[i], COLOR_BGR2GRAY);
-		//threshold(r[i], r[i], 100 , 255, THRESH_BINARY);
-	}
-	
-	//hconcat(r[0], r[1], img_show[0]);
-	//hconcat(r[2], r[3], img_show[1]);
-	hconcat(results[0], results[1], img_show[0]);
-	hconcat(results[2], results[3], img_show[1]);
+	hconcat(r[0], r[1], img_show[0]);
+	hconcat(r[2], r[3], img_show[1]);
 	hconcat(img_show[0], img_show[1], show);
 
-	string savename = "Canny_Result_" + to_string(index+1);
+	string savename = "Result_" + to_string(index+1);
 	imshow(savename, show);
 	//imwrite("D:/ImgSeg/experiments/" + savename + ".png", img_show[0]);
 	int key = waitKey(0);
@@ -268,27 +251,6 @@ Mat nonMaxSuppression(Mat dx, Mat dy, norm_type type) {
 		}
 	}
 	return nonMaxSup;
-}
-
-bool isInRange(int r, int c, int rows, int cols) {
-	if (r >= 0 && r < rows && c >= 0 && c < cols)
-		return true;
-	return false;
-}
-
-void track(Mat nonMaxSup, Mat& edge, float lowerThresh, int r, int c, int rows, int cols) {
-	if (edge.at<uchar>(r, c) == 0) {
-		edge.at<uchar>(r, c) == 255;
-		for (int i = -1; i <= 1; i++) {
-			for (int j = -1; j <= 1; j++) {
-				float mag = nonMaxSup.at<float>(r + i, c + j);
-				if (isInRange(r + i, c + j, rows, cols) && mag >= lowerThresh) {
-					cout << "Track again." << endl;
-					track(nonMaxSup, edge, lowerThresh, r + i, c + j, rows, cols);
-				}
-			}
-		}
-	}
 }
 
 Mat doubleThreshold(Mat nonMaxSup, float lowerThresh, float upperThresh) {
