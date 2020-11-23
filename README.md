@@ -12,8 +12,14 @@ From left to right: Prewitt operator, Scharr operator, Sobel operator, LoG
 ![image](https://github.com/sfwang20/ImageSegment/blob/master/results/y_Result1.png)
 
 ### Calculate the magnitude and apply thresholding
+From left to right: Prewitt operator, Scharr operator, Sobel operator, LoG
+![image](https://github.com/sfwang20/ImageSegment/blob/master/results/thresh_50_Result_1.png)
+
 From left to right: before/after preprocessing
+![image](https://github.com/sfwang20/ImageSegment/blob/master/results/threshold_100_Result_5.png)
+![image](https://github.com/sfwang20/ImageSegment/blob/master/results/threshold_150_Result_1.png)
 ![image](https://github.com/sfwang20/ImageSegment/blob/master/results/threshold_50_Result_2.png)
+
 
 ## Implementation of Canny detection
 
